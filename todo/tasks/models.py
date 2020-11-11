@@ -42,3 +42,20 @@ class Task(models.Model):
     def __str__(self):
         return self.title
 
+
+class Subtask(models.Model):
+    title = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=250,
+                            unique_for_date='created')
+
+    task = models.ForeignKey(Task,
+                             on_delete=models.CASCADE,
+                             related_name='subtasks')
+
+    status = models.BooleanField(default=False)
+
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+

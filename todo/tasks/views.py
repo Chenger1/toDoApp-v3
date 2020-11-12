@@ -1,7 +1,7 @@
 from django.views.generic import ListView
 
 
-from .models import Task
+from .models import Task, Category
 
 
 class TaskList(ListView):
@@ -9,5 +9,11 @@ class TaskList(ListView):
     template_name = 'task/list.html'
 
     def get(self, request, *args, **kwargs):
-        self.queryset = Task.objects.filter(author=request.user)
+        task_queryset = Task.objects.filter(author=request.user)
+        categories_queryset = Category.objects.filter(author=request.user)
+
+        self.queryset = {
+            'tasks': task_queryset,
+            'categories': categories_queryset
+        }
         return super().get(request, *args, **kwargs)

@@ -25,34 +25,42 @@
                     <td>Delete</td>
                     <td>More...</td>
                 </tr>
-
-                {% for task in object_list %}
-                    <tr>
-                        <td>{{ task.title }}</td>
-                        <td>{{ task.created }}</td>
-                        <td>{{ task.category }}</td>
-                        <td>
-                            <button type="button" class="btn btn-primary">Change</button>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-primary">Delete</button>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-primary">Show more</button>
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td>
-                            You have not created any tasks yet
-                        </td>
-                    </tr>
-                {% endfor %}
+                    {% with object_list.tasks as tasks %}
+                        {% for task in tasks %}
+                            <tr>
+                                <td>{{ task.title }}</td>
+                                <td>{{ task.created }}</td>
+                                <td>{{ task.category }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary">Change</button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary">Delete</button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary">Show more</button>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td>
+                                    You have not created any tasks yet
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endwith %}
             </table>
         </div>
 
         <aside class="col-md-4 col-xl-2">
             <h2>Categories:</h2>
+            <ul>
+                {% with object_list.categories as categories %}
+                    {% for category in categories %}
+                        <li>{{ category.name }}</li>
+                    {% endfor %}
+                {% endwith %}
+            </ul>
         </aside>
     </div>
 </div>

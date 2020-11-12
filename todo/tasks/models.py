@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 
 class Category(models.Model):
@@ -15,6 +16,11 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    def validate_unique(self, exclude=None):
+        super().validate_unique()
+        if Category.objects.filter(name=self.name, author=self.author):
+            raise ValidationError('This category already exists')
 
 
 class Task(models.Model):

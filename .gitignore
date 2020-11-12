@@ -131,3 +131,4 @@ dmypy.json
 
 /todo/todo/config.py
 /todo/tasks/migrations/
+/todo/users/migrations/

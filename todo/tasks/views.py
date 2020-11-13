@@ -1,4 +1,8 @@
 from django.views.generic import ListView
+from django.views.generic import View
+from django.shortcuts import render, redirect
+
+from .forms import CreateCategoryForm
 
 
 from .models import Task, Category
@@ -17,3 +21,21 @@ class TaskList(ListView):
             'categories': categories_queryset
         }
         return super().get(request, *args, **kwargs)
+
+
+class CreateCategoryView(View):
+    template = 'task/create_category.html'
+
+    def get(self, request):
+        form = CreateCategoryForm()
+        return render(request, self.template, {'form': form})
+
+    def post(self, request):
+        form = CreateCategoryForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            new_category = form.save(commit=False)
+            new_category.author = request.user
+            new_category.save()
+            return redirect('tasks:task_list')
+
+        return render(request, self.template, {'form': form})

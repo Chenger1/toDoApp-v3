@@ -13,14 +13,19 @@ class TaskList(ListView):
     template_name = 'task/list.html'
 
     def get(self, request, *args, **kwargs):
-        task_queryset = Task.objects.filter(author=request.user)
-        categories_queryset = Category.objects.filter(author=request.user)
+        try:
+            task_queryset = Task.objects.filter(author=request.user)
+            categories_queryset = Category.objects.filter(author=request.user)
+        except TypeError:
+            # If request.user == AnonymousUser
+            return redirect('users:login')
 
-        self.queryset = {
-            'tasks': task_queryset,
-            'categories': categories_queryset
-        }
-        return super().get(request, *args, **kwargs)
+        else:
+            self.queryset = {
+                'tasks': task_queryset,
+                'categories': categories_queryset
+            }
+            return super().get(request, *args, **kwargs)
 
 
 class CreateCategoryView(View):

@@ -27,7 +27,8 @@ class TaskList(ListView):
         else:
             self.queryset = {
                 'tasks': task_queryset,
-                'categories': categories_queryset
+                'categories': categories_queryset,
+                'current_category': category
             }
             return super().get(request, *args, **kwargs)
 

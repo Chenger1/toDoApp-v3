@@ -57,7 +57,13 @@
             <ul>
                 {% with object_list.categories as categories %}
                     {% for category in categories %}
-                        <li><a href="{% url 'tasks:task_list_in_category' category.id %}">{{ category.name }}</a></li>
+
+                        {% if object_list.current_category == category.id %}
+                            <li><a href="{% url 'tasks:task_list' %}" style="color: black; text-decoration: underline">{{ category.name }} - X</a></li>
+                        {% else %}
+                            <li><a href="{% url 'tasks:task_list_in_category' category.id %}" style="color: black;">{{ category.name }}</a></li>
+                        {% endif %}
+
                     {% endfor %}
                 {% endwith %}
             </ul>

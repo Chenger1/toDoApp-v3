@@ -57,7 +57,7 @@
             <ul>
                 {% with object_list.categories as categories %}
                     {% for category in categories %}
-                        <li>{{ category.name }}</li>
+                        <li><a href="{% url 'tasks:task_list_in_category' category.id %}">{{ category.name }}</a></li>
                     {% endfor %}
                 {% endwith %}
             </ul>

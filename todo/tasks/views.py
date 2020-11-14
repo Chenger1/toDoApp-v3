@@ -13,8 +13,12 @@ class TaskList(ListView):
     template_name = 'task/list.html'
 
     def get(self, request, *args, **kwargs):
+        category = kwargs.get('category_id')
         try:
-            task_queryset = Task.objects.filter(author=request.user)
+            if category:
+                task_queryset = Task.objects.filter(author=request.user, category=category)
+            else:
+                task_queryset = Task.objects.filter(author=request.user)
             categories_queryset = Category.objects.filter(author=request.user)
         except TypeError:
             # If request.user == AnonymousUser

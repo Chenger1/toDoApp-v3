@@ -32,9 +32,9 @@ class Task(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    category = models.OneToOneField(Category,
-                                    related_name='categories',
-                                    on_delete=models.CASCADE,)
+    category = models.ForeignKey(Category,
+                                 related_name='categories',
+                                 on_delete=models.CASCADE,)
 
     class Meta:
         ordering = ['-created']

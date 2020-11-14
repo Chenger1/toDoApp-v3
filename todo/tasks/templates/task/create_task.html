@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Create task{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>Create Task</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <h3>Subtasks</h3>
+             {{ subtasks.as_p }}
+
+            <p><input type="submit" value="Create task"></p>
+        </form>
+    </div>
+{% endblock %}

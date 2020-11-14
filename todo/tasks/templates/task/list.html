@@ -11,9 +11,9 @@
                     <h1>Tasks</h1>
                 </div>
                 <div class="col-2">
-                    <button type="button" class="btn btn-primary">
-                        Add Task
-                    </button>
+                    <a href="{% url 'tasks:create_task' %}">
+                        <button type="button" class="btn btn-primary">Add Task</button>
+                    </a>
                 </div>
             </div>
             <table class="table">

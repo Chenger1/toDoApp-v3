@@ -1,5 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.text import slugify
+
+from time import time
+
+
+def create_slug(title):
+    slug = slugify(title, allow_unicode=True)
+    return f'{slug}-{str(int(time()))}'
 
 
 class Category(models.Model):
@@ -15,6 +23,10 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = create_slug(self.name)
+        super().save(*args, **kwargs)
 
 
 class Task(models.Model):
@@ -36,11 +48,17 @@ class Task(models.Model):
                                  related_name='categories',
                                  on_delete=models.CASCADE,)
 
+    removed = models.BooleanField(default=False)
+
     class Meta:
         ordering = ['-created']
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        self.slug = create_slug(self.title)
+        super().save(*args, **kwargs)
 
 
 class Subtask(models.Model):
@@ -59,3 +77,6 @@ class Subtask(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        self.slug = create_slug(self.title)
+        super().save(*args, **kwargs)

@@ -16,9 +16,9 @@ class TaskList(ListView):
         category = kwargs.get('category_id')
         try:
             if category:
-                task_queryset = Task.objects.filter(author=request.user, category=category)
+                task_queryset = Task.objects.filter(author=request.user, category=category, removed=False)
             else:
-                task_queryset = Task.objects.filter(author=request.user)
+                task_queryset = Task.objects.filter(author=request.user, removed=False)
             categories_queryset = Category.objects.filter(author=request.user)
         except TypeError:
             # If request.user == AnonymousUser

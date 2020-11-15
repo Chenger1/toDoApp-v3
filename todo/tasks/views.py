@@ -1,6 +1,6 @@
 from django.views.generic import ListView
 from django.views.generic import View
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import CreateCategoryForm, CreateSubTaskFormSet, CreateTaskForm
 
@@ -61,8 +61,8 @@ class CreateTaskView(View):
                                                'subtasks': subtask_form})
 
     def post(self, request):
-        task_form = CreateTaskForm(request.user, request.POST)
-        subtask_form = CreateSubTaskFormSet(request.POST)
+        task_form = CreateTaskForm(request.user, data=request.POST)
+        subtask_form = CreateSubTaskFormSet(data=request.POST)
 
         if task_form.is_valid():
             task = task_form.save(commit=False)
@@ -75,5 +75,16 @@ class CreateTaskView(View):
                     subtask = Subtask.objects.create(title=form['title'],
                                                      task=task)
                     subtask.save()
+
+        return redirect('tasks:task_list')
+
+
+class TaskRemoveView(View):
+
+    def post(self, request, slug, status):
+        task = get_object_or_404(Task, slug__iexact=slug,
+                                 author=request.user)
+        task.removed = status
+        task.save()
 
         return redirect('tasks:task_list')

@@ -35,7 +35,10 @@
                                     <button type="button" class="btn btn-primary">Change</button>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-primary">Delete</button>
+                                    <form action="{% url 'tasks:remove_task' task.slug%}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-primary">Remove</button>
+                                    </form>
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-primary">Show more</button>

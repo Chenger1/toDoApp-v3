@@ -47,12 +47,15 @@
                                 <td>
                                     {% with task.get_model_name as model_name %}
                                         {% if task.status == False %}
-                                            <form action="{% url 'tasks:mark_as_done' task.slug model_name%}" method="post">
+                                            <form action="{% url 'tasks:mark_as_done' task.slug model_name 'list'%}" method="post">
                                                 {% csrf_token %}
                                                 <button type="submit" class="btn btn-success">Mars as Done</button>
                                             </form>
                                         {% else %}
-                                            <button type="submit" class="btn btn-secondary">Mars as not Done</button>
+                                            <form action="{% url 'tasks:mark_as_not_done' task.slug model_name 'list'%}" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-secondary">Mars as not Done</button>
+                                            </form>
                                         {% endif %}
                                     {% endwith %}
                                 </td>

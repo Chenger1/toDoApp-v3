@@ -132,16 +132,18 @@ class MarkAsDoneMixin(View):
         'Subtask': Subtask
     }
 
-    def post(self, request, slug, model_name, status):
+    def post(self, request, slug, model_name, template, status):
         model = self.models[model_name]
         obj = get_object_or_404(model,
                                 slug__iexact=slug)
         obj.status = status
         obj.save()
 
-        if model_name == 'Subtask':
-            slug = obj.task.slug
-        else:
-            slug = obj.slug
-
-        return redirect('tasks:task_detail', slug=slug)
+        if template == 'list':
+            return redirect('tasks:task_list')
+        elif template == 'detail':
+            if model_name == 'Subtask':
+                slug = obj.task.slug
+            else:
+                slug = obj.slug
+            return redirect('tasks:task_detail', slug=slug)

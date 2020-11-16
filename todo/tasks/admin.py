@@ -5,6 +5,7 @@ from .models import Task, Category, Subtask
 
 class SubtaskInLine(admin.StackedInline):
     model = Subtask
+    prepopulated_fields = {'slug': ('title',)}
 
 
 @admin.register(Task)

@@ -32,7 +32,19 @@
                     </li>
                     {% for subtask in object.subtasks.get_queryset %}
                         <li class="list-group-item">
-                            <p>{{ subtask.title }}</p>
+                            <div>
+                                <p>{{ subtask.title }}</p> -----------
+                                {% with subtask.get_model_name as model_name %}
+                                    {% if subtask.status == False %}
+                                        <form action="{% url 'tasks:mark_as_done' subtask.slug model_name%}" method="post">
+                                            {% csrf_token %}
+                                            <p><input type="submit" value="Mark as Done"></p>
+                                        </form>
+                                    {% else %}
+                                            <p><input type="submit" value="Mark as not Done"></p>
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
                             <small class="text-muted">
                                 Created: {{ subtask.created }}
                             </small>
@@ -40,15 +52,16 @@
                     {% endfor %}
                 </ul>
                 <div class="card-footer" style="text-align: left;">
-                    {% if object.status == False %}
-                        <a href="#">
-                            <button class="btn btn-success">Mark as Done</button>
-                        </a>
-                    {% else %}
-                        <a href="#">
-                            <button class="btn btn-secondary">Mark as not Done</button>
-                        </a>
-                    {% endif %}
+                    {% with object.get_model_name as model_name %}
+                        {% if task.status == False %}
+                            <form action="{% url 'tasks:mark_as_done' object.slug model_name%}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success">Mars as Done</button>
+                            </form>
+                        {% else %}
+                            <button type="submit" class="btn btn-secondary">Mars as not Done</button>
+                        {% endif %}
+                    {% endwith %}
                 </div>
             </div>
         </div>

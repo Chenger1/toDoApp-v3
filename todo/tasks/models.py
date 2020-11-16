@@ -60,6 +60,9 @@ class Task(models.Model):
         self.slug = create_slug(self.title)
         super().save(*args, **kwargs)
 
+    def get_model_name(self):
+        return self.__class__.__name__
+
 
 class Subtask(models.Model):
     title = models.CharField(max_length=100)
@@ -80,3 +83,6 @@ class Subtask(models.Model):
     def save(self, *args, **kwargs):
         self.slug = create_slug(self.title)
         super().save(*args, **kwargs)
+
+    def get_model_name(self):
+        return self.__class__.__name__

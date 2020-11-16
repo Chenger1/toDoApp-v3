@@ -24,6 +24,7 @@
                     <td>Change</td>
                     <td>Delete</td>
                     <td>More...</td>
+                    <td>Status</td>
                 </tr>
                     {% with object_list.tasks as tasks %}
                         {% for task in tasks %}
@@ -42,6 +43,18 @@
                                 </td>
                                 <td>
                                     <a href="{% url 'tasks:task_detail' task.slug %}"><button class="btn btn-primary">Detail</button></a>
+                                </td>
+                                <td>
+                                    {% with task.get_model_name as model_name %}
+                                        {% if task.status == False %}
+                                            <form action="{% url 'tasks:mark_as_done' task.slug model_name%}" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-success">Mars as Done</button>
+                                            </form>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-secondary">Mars as not Done</button>
+                                        {% endif %}
+                                    {% endwith %}
                                 </td>
                             </tr>
                         {% empty %}

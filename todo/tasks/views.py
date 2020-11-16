@@ -2,6 +2,7 @@ from django.views.generic import ListView
 from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.text import slugify
 
 from .forms import CreateCategoryForm, CreateSubTaskFormSet, CreateTaskForm
 
@@ -123,3 +124,24 @@ class TaskUpdateView(View):
 class TaskDetailView(DetailView):
     model = Task
     template_name = 'task/detail.html'
+
+
+class MarkAsDoneMixin(View):
+    models = {
+        'Task': Task,
+        'Subtask': Subtask
+    }
+
+    def post(self, request, slug, model_name, status):
+        model = self.models[model_name]
+        obj = get_object_or_404(model,
+                                slug__iexact=slug)
+        obj.status = status
+        obj.save()
+
+        if model_name == 'Subtask':
+            slug = obj.task.slug
+        else:
+            slug = obj.slug
+
+        return redirect('tasks:task_detail', slug=slug)

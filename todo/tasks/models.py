@@ -57,7 +57,8 @@ class Task(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        self.slug = create_slug(self.title)
+        if self.slug == '':
+            self.slug = create_slug(self.title)
         super().save(*args, **kwargs)
 
     def get_model_name(self):
@@ -81,7 +82,8 @@ class Subtask(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        self.slug = create_slug(self.title)
+        if '-' not in self.slug:
+            self.slug = create_slug(self.title)
         super().save(*args, **kwargs)
 
     def get_model_name(self):

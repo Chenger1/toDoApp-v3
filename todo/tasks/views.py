@@ -2,7 +2,7 @@ from django.views.generic import ListView
 from django.views.generic import View
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .forms import CreateCategoryForm, CreateSubTaskFormSet, CreateTaskForm, CreateSubTaskForm
+from .forms import CreateCategoryForm, CreateSubTaskFormSet, CreateTaskForm
 
 
 from .models import Task, Category, Subtask

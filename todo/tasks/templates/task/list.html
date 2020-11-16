@@ -41,7 +41,7 @@
                                     </form>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-primary">Show more</button>
+                                    <a href="{% url 'tasks:task_detail' task.slug %}"><button class="btn btn-primary">Detail</button></a>
                                 </td>
                             </tr>
                         {% empty %}

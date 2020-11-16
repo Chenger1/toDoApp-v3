@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}{{ object.title }}{% endblock %}
+
+{% block content %}
+<h1>Task: #{{ object.id }}</h1>
+    <hr>
+<div class="container">
+    <div class="row">
+        <div class="col-10">
+            <div class="card" style="text-align: center; max-width:70%;" >
+                <div class="card-header">
+                    <h1>{{ object.title }}</h1>
+                </div>
+                <div class="body" >
+                    <p class="card-text">
+                        {% if object.description %}
+                            {{ object.description }}
+                        {% else %}
+                            <strong>There is no description yet.</strong>
+                        {% endif %}
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Last updated: {{ object.updated }}
+                        </small>
+                    </p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" style="text-align: left;">
+                        <strong>Subtasks:</strong>
+                    </li>
+                    {% for subtask in object.subtasks.get_queryset %}
+                        <li class="list-group-item">
+                            <p>{{ subtask.title }}</p>
+                            <small class="text-muted">
+                                Created: {{ subtask.created }}
+                            </small>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="card-footer" style="text-align: left;">
+                    {% if object.status == False %}
+                        <a href="#">
+                            <button class="btn btn-success">Mark as Done</button>
+                        </a>
+                    {% else %}
+                        <a href="#">
+                            <button class="btn btn-secondary">Mark as not Done</button>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-2">
+            <div class="card" style="width: 10rem;">
+                <div class="card-header">
+                    <h3>Options: </h3>
+                    <ul class="list-group list-group-flush" style="text-align: center;">
+                        <li class="list-group-item">
+                            <h6>Category: </h6>
+                            <a href="{% url 'tasks:task_list_in_category' object.category.id%}">{{ object.category }}</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="{% url 'tasks:update_task' object.slug%}">
+                                <button class="btn btn-primary">Edit</button>
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <form action="{% url 'tasks:remove_task' object.slug%}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Remove</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

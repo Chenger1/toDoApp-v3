@@ -1,5 +1,6 @@
 from django.views.generic import ListView
 from django.views.generic import View
+from django.views.generic.detail import DetailView
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import CreateCategoryForm, CreateSubTaskFormSet, CreateTaskForm
@@ -117,3 +118,8 @@ class TaskUpdateView(View):
                 updated_task.save()
 
         return redirect('tasks:task_list')
+
+
+class TaskDetailView(DetailView):
+    model = Task
+    template_name = 'task/detail.html'

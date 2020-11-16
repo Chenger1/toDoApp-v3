@@ -32,7 +32,7 @@
                                 <td>{{ task.created }}</td>
                                 <td>{{ task.category }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-primary">Change</button>
+                                    <a href="{% url 'tasks:update_task' task.slug %}"><button class="btn btn-primary">Edit</button></a>
                                 </td>
                                 <td>
                                     <form action="{% url 'tasks:remove_task' task.slug%}" method="post">

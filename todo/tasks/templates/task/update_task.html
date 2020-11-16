@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Change task{% endblock %}
+
+{% block content %}
+    <h1>Change task</h1>
+    <div>
+        <form method="post">
+            {% csrf_token %}
+
+            {{ task_form.as_p }}
+
+            <h3>Subtasks</h3>
+            {{ subtasks_forms.as_p }}
+
+        <p><input type="submit" value="Save"></p>
+        </form>
+    </div>
+{% endblock %}

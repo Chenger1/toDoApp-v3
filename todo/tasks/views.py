@@ -2,7 +2,7 @@ from django.views.generic import ListView
 from django.views.generic import View
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .forms import CreateCategoryForm, CreateSubTaskFormSet, CreateTaskForm
+from .forms import CreateCategoryForm, CreateSubTaskFormSet, CreateTaskForm, CreateSubTaskForm
 
 
 from .models import Task, Category, Subtask
@@ -86,5 +86,34 @@ class TaskRemoveView(View):
                                  author=request.user)
         task.removed = status
         task.save()
+
+        return redirect('tasks:task_list')
+
+
+class TaskUpdateView(View):
+    template = 'task/update_task.html'
+
+    def get(self, request, slug):
+        task = get_object_or_404(Task,
+                                 slug__iexact=slug, author=request.user)
+
+        task_form = CreateTaskForm(request.user, instance=task)
+        subtasks_forms = CreateSubTaskFormSet(instance=task)
+
+        return render(request, self.template, {'task_form': task_form,
+                                               'subtasks_forms': subtasks_forms})
+
+    def post(self, request, slug):
+        task = get_object_or_404(Task,
+                                 slug__iexact=slug, author=request.user)
+        task_form = CreateTaskForm(request.user, request.POST, instance=task)
+        subtask_form = CreateSubTaskFormSet(data=request.POST, instance=task)
+
+        if task_form.is_valid():
+            updated_task = task_form.save(commit=False)
+
+            if subtask_form.is_valid():
+                subtask_form.save()
+                updated_task.save()
 
         return redirect('tasks:task_list')

@@ -21,6 +21,7 @@
                     <td>Name</td>
                     <td class="text-center">Data</td>
                     <td>Category</td>
+                    <td>Subtasks</td>
                     <td>Change</td>
                     <td>Delete</td>
                     <td>More...</td>
@@ -32,6 +33,7 @@
                                 <td>{{ task.title }}</td>
                                 <td>{{ task.created }}</td>
                                 <td>{{ task.category }}</td>
+                                <td>{{ task.subtasks.count }}</td>
                                 <td>
                                     <a href="{% url 'tasks:update_task' task.slug %}"><button class="btn btn-primary">Edit</button></a>
                                 </td>

@@ -145,3 +145,15 @@ class MarkAsDoneMixin(View):
             if model_name == 'Subtask':
                 slug = obj.task.slug
             return redirect('tasks:task_detail', slug=slug)
+
+
+class TaskHistoryView(ListView):
+    model = Task
+    template_name = 'task/history.html'
+
+    def get(self, request, *args, **kwargs):
+        task_queryset = Task.objects.filter(author=request.user)
+        self.queryset = {
+            'tasks': task_queryset
+        }
+        return super().get(request, *args, **kwargs)

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}History - {{request.user}}{% endblock %}
+
+{% block content %}
+    <h1>History - {{ request.user }}</h1>
+    <div>
+        {% with object_list.tasks as tasks %}
+            {% for task in tasks %}
+                    <div class="card" style="text-align: center; max-width:50%; margin: 0 auto; margin-top: 30px;" >
+                        <div class="card-header">
+                            <h1>{{ task.title }}</h1>
+                        </div>
+                        <div class="body" >
+                            <p class="card-text">
+                                {% if task.description %}
+                                    {{ task.description }}
+                                {% else %}
+                                    <strong>There is no description.</strong>
+                                {% endif %}
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    Last updated: {{ task.updated }}
+                                </small>
+                            </p>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item" style="text-align: left;">
+                                <strong>Subtasks:</strong>
+                            </li>
+                            {% for subtask in task.subtasks.get_queryset %}
+                                <li class="list-group-item">
+                                        <p>{{ subtask.title }}</p>
+                                    <small class="text-muted">
+                                        Created: {{ subtask.created }}
+                                    </small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="card-footer" style="text-align: left;">
+                            <div class="row">
+                                <div class="col-8">
+                                    {% if task.removed == True %}
+                                        <form action="{% url 'tasks:restore_task' task.slug %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-success">Restore</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                                <div class="col-4">
+                                    <form action="">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Delete permanently</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            {% empty %}
+                <div>
+                    There is no tasks yet.
+                </div>
+            {% endfor %}
+        {% endwith %}
+    </div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user }}{% endblock %}
+
+{% block content %}
+    <div style="margin-top: 30px;">
+        <div class="row" style="margin-left: 15px;">
+            <div class="col-3">
+                <h1>{{ user }}</h1>
+                <h4>Date joined: {{ user.date_joined }}</h4>
+                <h4>Last login: {{ user.last_login }}</h4>
+                <hr>
+                <h4>Active tasks: {{ counter }}</h4>
+            </div>
+            <div class="col-6">
+                <h1>Tasks:</h1>
+                <table class="table">
+                    <tr>
+                        <td>Title</td>
+                        <td>Created</td>
+                        <td>Status</td>
+                        <td>Subtasks</td>
+                        <td>Link</td>
+                    </tr>
+                        {% for task in tasks %}
+                            <tr>
+                                <td>{{ task.title }}</td>
+                                <td>{{ task.created }}</td>
+                                <td>
+                                    {% if task.status == True%}
+                                        Done
+                                    {% else %}
+                                        Not done
+                                    {% endif %}
+                                </td>
+                                <td>{{ task.subtasks.count }}</td>
+                                <td>
+                                    <a href="{% url 'tasks:task_detail' task.slug%}">
+                                        <p><input type="submit" value="Show"></p>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td>There are no tasks yet.</td>
+                            </tr>
+                        {% endfor %}
+                </table>
+            </div>
+            <div class="col-3">
+                <h1>Categories:</h1>
+                <ul>
+                    {% for category in categories %}
+                        <li>
+                            <a href="{% url 'tasks:task_list_in_category' category.id%}">
+                                {{ category.name }}
+                            </a>
+                        </li>
+                    {% empty %}
+                        <li>No categories yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+    </div>
+{% endblock %}

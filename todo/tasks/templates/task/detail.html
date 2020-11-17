@@ -46,6 +46,10 @@
                                             <p><input type="submit" value="Mark as not Done"></p>
                                         </form>
                                     {% endif %}
+                                        <form action="{% url 'tasks:delete_object' subtask.slug model_name 'detail'%}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
                                 {% endwith %}
                             </div>
                             <small class="text-muted">

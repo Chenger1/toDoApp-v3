@@ -144,6 +144,4 @@ class MarkAsDoneMixin(View):
         elif template == 'detail':
             if model_name == 'Subtask':
                 slug = obj.task.slug
-            else:
-                slug = obj.slug
             return redirect('tasks:task_detail', slug=slug)

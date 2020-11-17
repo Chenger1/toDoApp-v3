@@ -2,7 +2,6 @@ from django.views.generic import ListView
 from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.shortcuts import render, redirect, get_object_or_404
-from django.utils.text import slugify
 
 from .forms import CreateCategoryForm, CreateSubTaskFormSet, CreateTaskForm
 
@@ -157,3 +156,23 @@ class TaskHistoryView(ListView):
             'tasks': task_queryset
         }
         return super().get(request, *args, **kwargs)
+
+
+class ObjectDeleteMixin(View):
+    models = {
+        'Task': Task,
+        'Subtask': Subtask
+    }
+    model = None
+
+    def post(self, request, slug, model_name, template):
+        self.model = self.models[model_name]
+        obj = get_object_or_404(self.model,
+                                slug__iexact=slug)
+        obj.delete()
+
+        if template == 'detail':
+            slug = obj.task.slug
+            return redirect('tasks:task_detail', slug=slug)
+        elif template == 'history':
+            return redirect('tasks:task_history')

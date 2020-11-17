@@ -18,4 +18,6 @@ urlpatterns = [
          {'status': True}, name='mark_as_done'),
     path('mark-as-not-done/<slug:slug>/<str:model_name>/<str:template>/', views.MarkAsDoneMixin.as_view(),
          {'status': False}, name='mark_as_not_done'),
+    path('delete-permanently/<slug:slug>/<str:model_name>/<str:template>/', views.ObjectDeleteMixin.as_view(),
+         name='delete_object'),
 ]

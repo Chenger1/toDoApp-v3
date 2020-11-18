@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils.text import slugify
+from django.conf import settings
 
 from time import time
 
@@ -15,7 +15,7 @@ class Category(models.Model):
     slug = models.SlugField(max_length=150,
                             unique_for_date='created')
 
-    author = models.ForeignKey(User,
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                on_delete=models.CASCADE,
                                related_name='categories')
 
@@ -33,7 +33,7 @@ class Task(models.Model):
     title = models.CharField(max_length=50)
     slug = models.SlugField(max_length=250,
                             unique_for_date='created')
-    author = models.ForeignKey(User,
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                on_delete=models.CASCADE,
                                related_name='saved_tasks')
 

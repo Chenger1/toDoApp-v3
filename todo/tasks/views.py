@@ -5,7 +5,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import CreateCategoryForm, CreateSubTaskFormSet, CreateTaskForm
 
-
 from .models import Task, Category, Subtask
 
 
@@ -69,6 +68,8 @@ class CreateTaskView(View):
             task = task_form.save(commit=False)
             task.author = request.user
             task.save()
+            request.user.total_tasks += 1
+            request.user.save()
 
             cd = list(filter(lambda x: len(x) > 0, subtask_form.cleaned_data))
             if subtask_form.is_valid() and cd:
@@ -81,7 +82,6 @@ class CreateTaskView(View):
 
 
 class TaskRemoveView(View):
-
     def post(self, request, slug, status):
         task = get_object_or_404(Task, slug__iexact=slug,
                                  author=request.user)

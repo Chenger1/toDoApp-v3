@@ -127,3 +127,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 LOGIN_REDIRECT_URL = 'tasks:task_list'
 LOGOUT_REDIRECT_URL = 'users:login'
+
+AUTH_USER_MODEL = 'users.CustomUser'

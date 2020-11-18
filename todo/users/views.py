@@ -1,17 +1,19 @@
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
 from tasks.models import Task, Category
 
+from .models import CustomUser
+
+from .forms import CustomUserCreationForm
+
 
 class UserRegistrationView(CreateView):
     template_name = 'users/user/registration.html'
-    form_class = UserCreationForm
+    form_class = CustomUserCreationForm
     success_url = reverse_lazy('tasks:task_list')
 
     def form_valid(self, form):
@@ -24,12 +26,12 @@ class UserRegistrationView(CreateView):
 
 
 class UserDetailView(DetailView):
-    model = User
+    model = CustomUser
     template_name = 'users/user/detail.html'
     user = None
 
     def get(self, request, *args, **kwargs):
-        self.user = get_object_or_404(User, pk=kwargs['pk'])
+        self.user = get_object_or_404(CustomUser, pk=kwargs['pk'])
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

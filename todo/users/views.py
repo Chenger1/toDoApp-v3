@@ -36,7 +36,7 @@ class UserDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         result = super().get_context_data(**kwargs)
-        task_queryset = Task.objects.filter(author=self.user)
+        task_queryset = Task.objects.filter(author=self.user, removed=False)
         task_counter = task_queryset.count()
         category_queryset = Category.objects.filter(author=self.user)
 

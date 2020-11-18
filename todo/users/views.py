@@ -7,8 +7,8 @@ from django.shortcuts import get_object_or_404
 from tasks.models import Task, Category
 
 from .models import CustomUser
-
 from .forms import CustomUserCreationForm
+from .utils import CustomLoginRequiredMixin
 
 
 class UserRegistrationView(CreateView):
@@ -25,7 +25,7 @@ class UserRegistrationView(CreateView):
         return result
 
 
-class UserDetailView(DetailView):
+class UserDetailView(CustomLoginRequiredMixin, DetailView):
     model = CustomUser
     template_name = 'users/user/detail.html'
     user = None

@@ -4,36 +4,33 @@ from django.views.generic.detail import DetailView
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import CreateCategoryForm, CreateSubTaskFormSet, CreateTaskForm
-
 from .models import Task, Category, Subtask
+from users.utils import CustomLoginRequiredMixin
 
 
-class TaskList(ListView):
+class TaskList(CustomLoginRequiredMixin, ListView):
     queryset = None
     template_name = 'task/list.html'
+    login_url = 'users:login'
 
     def get(self, request, *args, **kwargs):
         category = kwargs.get('category_id')
-        try:
-            if category:
-                task_queryset = Task.objects.filter(author=request.user, category=category, removed=False)
-            else:
-                task_queryset = Task.objects.filter(author=request.user, removed=False)
-            categories_queryset = Category.objects.filter(author=request.user)
-        except TypeError:
-            # If request.user == AnonymousUser
-            return redirect('users:login')
 
+        if category:
+            task_queryset = Task.objects.filter(author=request.user, category=category, removed=False)
         else:
-            self.queryset = {
-                'tasks': task_queryset,
-                'categories': categories_queryset,
-                'current_category': category
+            task_queryset = Task.objects.filter(author=request.user, removed=False)
+        categories_queryset = Category.objects.filter(author=request.user)
+
+        self.queryset = {
+            'tasks': task_queryset,
+            'categories': categories_queryset,
+            'current_category': category
             }
-            return super().get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
 
-class CreateCategoryView(View):
+class CreateCategoryView(CustomLoginRequiredMixin, View):
     template = 'task/create_category.html'
 
     def get(self, request):
@@ -51,7 +48,7 @@ class CreateCategoryView(View):
         return render(request, self.template, {'form': form})
 
 
-class CreateTaskView(View):
+class CreateTaskView(CustomLoginRequiredMixin, View):
     template = 'task/create_task.html'
 
     def get(self, request):
@@ -81,7 +78,7 @@ class CreateTaskView(View):
         return redirect('tasks:task_list')
 
 
-class TaskRemoveView(View):
+class TaskRemoveView(CustomLoginRequiredMixin, View):
     def post(self, request, slug, status):
         task = get_object_or_404(Task, slug__iexact=slug,
                                  author=request.user)
@@ -91,7 +88,7 @@ class TaskRemoveView(View):
         return redirect('tasks:task_list')
 
 
-class TaskUpdateView(View):
+class TaskUpdateView(CustomLoginRequiredMixin, View):
     template = 'task/update_task.html'
 
     def get(self, request, slug):
@@ -120,12 +117,12 @@ class TaskUpdateView(View):
         return redirect('tasks:task_list')
 
 
-class TaskDetailView(DetailView):
+class TaskDetailView(CustomLoginRequiredMixin, DetailView):
     model = Task
     template_name = 'task/detail.html'
 
 
-class MarkAsDoneMixin(View):
+class MarkAsDoneMixin(CustomLoginRequiredMixin, View):
     models = {
         'Task': Task,
         'Subtask': Subtask
@@ -146,7 +143,7 @@ class MarkAsDoneMixin(View):
             return redirect('tasks:task_detail', slug=slug)
 
 
-class TaskHistoryView(ListView):
+class TaskHistoryView(CustomLoginRequiredMixin, ListView):
     model = Task
     template_name = 'task/history.html'
 
@@ -158,7 +155,7 @@ class TaskHistoryView(ListView):
         return super().get(request, *args, **kwargs)
 
 
-class ObjectDeleteMixin(View):
+class ObjectDeleteMixin(CustomLoginRequiredMixin, View):
     models = {
         'Task': Task,
         'Subtask': Subtask

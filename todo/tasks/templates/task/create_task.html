@@ -9,10 +9,33 @@
             {% csrf_token %}
             {{ form.as_p }}
             <h3>Subtasks</h3>
-                {{ subtasks.as_p }}
-                {{ subtasks.management_form }}
-
+                <table id="id_subtasks">
+                    <thead>
+                        <tr>
+                            <th scope="col">You can add as much as you want</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for form in subtasks.forms %}
+                            <tr id="{{ form.prefix }}-row">
+                                <td>
+                                    {% for fld in form.hidden_fields %}{{fld}}{%endfor%}
+                                    Title
+                                    {{ form.title }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {{subtasks.management_form}}
             <p><input type="submit" value="Create task"></p>
         </form>
     </div>
+<script>
+        $('#id_subtasks tbody tr').formset({
+        addText: 'Add new subtask',
+        deleteText: 'Remove',
+        prefix: '{{subtasks.prefix}}'
+    });
+</script>
 {% endblock %}

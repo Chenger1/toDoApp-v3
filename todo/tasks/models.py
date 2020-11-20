@@ -64,6 +64,18 @@ class Task(models.Model):
     def get_model_name(self):
         return self.__class__.__name__
 
+    def check_subtasks(self, commit=True):
+        total_subtasks = self.subtasks.count()
+        finished_subtasks = self.subtasks.filter(status=True).count()
+        if total_subtasks == finished_subtasks:
+            self.status = True
+        else:
+            if self.status:
+                self.status = False
+
+        if commit:
+            self.save()
+
 
 class Subtask(models.Model):
     title = models.CharField(max_length=100)

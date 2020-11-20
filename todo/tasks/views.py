@@ -112,8 +112,8 @@ class TaskUpdateView(CustomLoginRequiredMixin, View):
 
             if subtask_form.is_valid():
                 subtask_form.save()
+                updated_task.check_subtasks(commit=False)
                 updated_task.save()
-
         return redirect('tasks:task_list')
 
 
@@ -134,6 +134,8 @@ class MarkAsDoneMixin(CustomLoginRequiredMixin, View):
                                 slug__iexact=slug)
         obj.status = status
         obj.save()
+        if model_name == 'Subtask':
+            obj.task.check_subtasks()
 
         if template == 'list':
             return redirect('tasks:task_list')

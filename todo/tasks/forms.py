@@ -36,4 +36,5 @@ class CreateSubTaskForm(forms.ModelForm):
 
 
 CreateSubTaskFormSet = forms.inlineformset_factory(Task, Subtask,
-                                                   form=CreateSubTaskForm, extra=2)
+                                                   form=CreateSubTaskForm, extra=2,
+                                                   can_delete=False)

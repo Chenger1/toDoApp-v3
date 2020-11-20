@@ -9,7 +9,8 @@
             {% csrf_token %}
             {{ form.as_p }}
             <h3>Subtasks</h3>
-             {{ subtasks.as_p }}
+                {{ subtasks.as_p }}
+                {{ subtasks.management_form }}
 
             <p><input type="submit" value="Create task"></p>
         </form>

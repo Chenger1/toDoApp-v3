@@ -1,19 +1,39 @@
 from django.test import TestCase
-from django.contrib.auth.models import User
 
-from .models import Task
+from .models import Task, Category, Subtask
+
+from users.models import CustomUser
 
 
 class TaskTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        User.objects.create(username='test')
-        Task.objects.create(title='second',
-                            author=User.objects.get(username='test'),
+        user = CustomUser.objects.create(username='test')
+        category = Category.objects.create(name='test', author=user)
+        task = Task.objects.create(title='second',
+                            author=user,
+                            category=category
                             )
+        Subtask.objects.create(title='subtask1', task=task)
+        Subtask.objects.create(title='subtask2', task=task)
 
     def test_title_label(self):
         task = Task.objects.get(id=1)
         field_label = task._meta.get_field('title').verbose_name
         self.assertEquals(field_label, 'title')
+
+    def test_subtasks(self):
+        task = Task.objects.get(id=1)
+        Subtask.objects.create(title='subtask1', task=task)
+        Subtask.objects.create(title='subtask2', task=task)
+        self.assertEquals(task.subtasks.count(), 4)
+
+    def test_mark_as_done(self):
+        task = Task.objects.get(id=1)
+        subtasks = task.subtasks.get_queryset()
+        for subtask in subtasks:
+            subtask.status = True
+            subtask.save()
+        task.check_subtasks()
+        self.assertEquals(task.status, True)

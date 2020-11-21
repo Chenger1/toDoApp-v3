@@ -44,6 +44,14 @@ class TaskTest(TestCase):
         category = Category.objects.get(id=1)
         form_data = {'title': 'test_form',
                      'description': 'Test description',
-                     'category': category}
+                     'category': category,
+                     'author': user}
         form = CreateTaskForm(user, form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_category_form(self):
+        user = CustomUser.objects.get(id=1)
+        form_data = {'name': 'test_category',
+                     'author': user}
+        form = CreateCategoryForm(user, form_data)
         self.assertTrue(form.is_valid())

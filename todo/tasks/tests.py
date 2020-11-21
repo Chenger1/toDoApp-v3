@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from .models import Task, Category, Subtask
+from .forms import CreateCategoryForm, CreateTaskForm
 
 from users.models import CustomUser
 
@@ -12,9 +13,9 @@ class TaskTest(TestCase):
         user = CustomUser.objects.create(username='test')
         category = Category.objects.create(name='test', author=user)
         task = Task.objects.create(title='second',
-                            author=user,
-                            category=category
-                            )
+                                   author=user,
+                                   category=category
+                                   )
         Subtask.objects.create(title='subtask1', task=task)
         Subtask.objects.create(title='subtask2', task=task)
 
@@ -37,3 +38,12 @@ class TaskTest(TestCase):
             subtask.save()
         task.check_subtasks()
         self.assertEquals(task.status, True)
+
+    def test_task_form(self):
+        user = CustomUser.objects.get(id=1)
+        category = Category.objects.get(id=1)
+        form_data = {'title': 'test_form',
+                     'description': 'Test description',
+                     'category': category}
+        form = CreateTaskForm(user, form_data)
+        self.assertTrue(form.is_valid())

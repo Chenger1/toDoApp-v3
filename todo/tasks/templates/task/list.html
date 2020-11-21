@@ -29,7 +29,7 @@
                 </tr>
                     {% with object_list.tasks as tasks %}
                         {% for task in tasks %}
-                            <tr>
+                            <tr {% if task.status == True %} class="done" {% endif %}>
                                 <td>{{ task.title }}</td>
                                 <td>{{ task.created }}</td>
                                 <td>{{ task.category }}</td>

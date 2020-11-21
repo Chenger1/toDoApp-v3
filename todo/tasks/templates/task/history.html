@@ -8,7 +8,7 @@
         {% with object_list.tasks as tasks %}
             {% for task in tasks %}
                     <div class="card" style="text-align: center; max-width:50%; margin: 0 auto; margin-top: 30px;" >
-                        <div class="card-header">
+                        <div class="card-header {% if task.status == True %} done {% endif %}">
                             <h1>{{ task.title }}</h1>
                         </div>
                         <div class="body" >
@@ -30,7 +30,7 @@
                                 <strong>Subtasks:</strong>
                             </li>
                             {% for subtask in task.subtasks.get_queryset %}
-                                <li class="list-group-item">
+                                <li class="list-group-item {% if subtask.status == True %} done {% endif %}">
                                         <p>{{ subtask.title }}</p>
                                     <small class="text-muted">
                                         Created: {{ subtask.created }}
